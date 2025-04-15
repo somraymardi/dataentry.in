@@ -89,6 +89,10 @@
                 <label for="address" class="block text-gray-700 text-sm font-bold mb-2">Address:</label>
                 <textarea id="address" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required></textarea>
             </div>
+            <div class="mb-4">
+                <label for="photo" class="block text-gray-700 text-sm font-bold mb-2">Photo:</label>
+                <input id="photo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="file" accept="image/*" required>
+            </div>
             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="submit-btn">Submit</button>
             <div id="loading" class="loading hidden"></div>
         </form>
@@ -107,6 +111,7 @@
                     <th class="px-4 py-2">Email</th>
                     <th class="px-4 py-2">Phone</th>
                     <th class="px-4 py-2">Address</th>
+                    <th class="px-4 py-2">Photo</th>
                 </tr>
             </thead>
             <tbody id="data-table-body">
@@ -125,6 +130,7 @@
         const emailInput = document.getElementById('email');
         const phoneInput = document.getElementById('phone');
         const addressInput = document.getElementById('address');
+        const photoInput = document.getElementById('photo');
         const submitBtn = document.getElementById('submit-btn');
         const modal = document.getElementById('modal');
         const closeModalBtn = document.getElementById('close-modal');
@@ -178,11 +184,16 @@
             const email = emailInput.value;
             const phone = phoneInput.value;
             const address = addressInput.value;
-            storedData.push({ name, email, phone, address });
-            localStorage.setItem('storedData', JSON.stringify(storedData));
-            updateDataTable();
-            showConfirmationModal(`Data saved successfully for ${name}`);
-            loading.classList.add('hidden');
+            const photo = photoInput.files[0];
+            const reader = new FileReader();
+            reader.onload = () => {
+                storedData.push({ name, email, phone, address, photo: reader.result });
+                localStorage.setItem('storedData', JSON.stringify(storedData));
+                updateDataTable();
+                showConfirmationModal(`Data saved successfully for ${name}`);
+                loading.classList.add('hidden');
+            };
+            reader.readAsDataURL(photo);
         });
 
         logoutBtn.addEventListener('click', () => {
@@ -252,6 +263,7 @@
                     <td class="px-4 py-2">${data.email}</td>
                     <td class="px-4 py-2">${data.phone}</td>
                     <td class="px-4 py-2">${data.address}</td>
+                    <td class="px-4 py-2"><img src="${data.photo}" width="50" height="50" alt="Photo"></td>
                 `;
                 dataTableBody.appendChild(row);
             });
