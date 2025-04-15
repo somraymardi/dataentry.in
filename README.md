@@ -1,5 +1,5 @@
 # dataentry.in
-<!DOCTYPE html>
+CREDIT BY THE SOMRAY MARDI
 <html lang="en">
 <head>
     <meta charset="UTF-8">
